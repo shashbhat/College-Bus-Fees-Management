@@ -1,4 +1,5 @@
 from tkinter import *
+import os
 
 
 def login():
@@ -37,18 +38,14 @@ def login_verify():
     for line in open("users.txt", "r").readlines():  # Read the lines
         login_info = line.split()  # Split on the space, and store the results in a list of two strings
         if username1 == login_info[0] and password1 == login_info[1]:
-            login_success()
+            login_screen.destroy()
+            callback()
             return TRUE
     password_not_recognised()
 
 
-def login_success():
-    global login_success_screen
-    login_success_screen = Toplevel(login_screen)
-    login_success_screen.title('Login Success')
-    login_success_screen.geometry('312x312')
-    Label(login_success_screen, text='Login Success').pack()
-    Button(login_success_screen, text='OK', command=delete_login_success).pack()
+def callback():
+    os.system('python add_bus.py')
 
 
 def password_not_recognised():
@@ -60,25 +57,8 @@ def password_not_recognised():
     Button(password_not_recog_screen, text='OK', command=delete_password_not_recognised).pack()
 
 
-def user_not_found():
-    global user_not_found_screen
-    user_not_found_screen = Toplevel(login_screen)
-    user_not_found_screen.title('User not found')
-    user_not_found_screen.geometry('212x212')
-    Label(user_not_found_screen, text='User not found').pack()
-    Button(user_not_found_screen, text='OK', command=delete_user_not_found).pack()
-
-
-def delete_login_success():
-    login_success_screen.destroy()
-
-
 def delete_password_not_recognised():
     password_not_recog_screen.destroy()
-
-
-def delete_user_not_found():
-    user_not_found_screen.destroy()
 
 
 def main_page():
