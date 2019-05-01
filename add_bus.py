@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 import csv
+import os
 
 
 def bus_add():
@@ -56,6 +57,43 @@ def bus_display():
             r += 1
 
 
+def search_bus():
+    global search_screen
+    search_screen = Toplevel(main_screen)
+    global bus_search
+    bus_search = StringVar()
+    search_screen.title('Search bus')
+    search_screen.geometry('512x512')
+    Label(search_screen, text='Search for bus').pack()
+    Label(search_screen, text='Enter Bus num').place(x=20, y=70)
+    Entry(search_screen, textvariable=bus_search).place(x=110, y=70)
+    Button(search_screen, text='Search', command=search).place(relx=0.5, rely=0.6)
+
+
+def search():
+    bus_text = bus_search.get()
+    global line
+    with open('bus.txt', 'r') as file:
+        for line in file:
+            if bus_text in line:
+                display_searched()
+                break
+            else:
+                print('Not found')
+
+
+def display_searched():
+    global screen_disp
+    screen_disp = Toplevel(search_screen)
+    screen_disp.title('Bus Found')
+    screen_disp.geometry('312x312')
+    Label(screen_disp, text=line).pack()
+
+
+def student():
+    os.system('python student.py')
+
+
 def main_page():
     global main_screen
     main_screen = Tk()
@@ -66,6 +104,8 @@ def main_page():
     Button(text='Add Bus Details', height='2', width='30', command=bus_add).pack()
     Label(text='').pack()
     Button(text='Display Bus Details', height='2', width='30', command=bus_display).pack()
+    Label(text='').pack()
+    Button(text='Search for Bus', height='2', width='30', command=search_bus).pack()
     Label(text='').pack()
 
     main_screen.mainloop()

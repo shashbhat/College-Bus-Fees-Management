@@ -45,7 +45,7 @@ def login_verify():
 
 
 def callback():
-    os.system('python add_bus.py')
+    os.system('python main.py')
 
 
 def password_not_recognised():
