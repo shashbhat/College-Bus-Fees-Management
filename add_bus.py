@@ -82,6 +82,31 @@ def search():
                 print('Not found')
 
 
+def delete_bus():
+    global delete_screen
+    delete_screen = Toplevel(main_screen)
+    global bus_delete
+    bus_delete = StringVar()
+    delete_screen.title('Delete bus')
+    delete_screen.geometry('512x512')
+    Label(delete_screen, text='Delete Bus').pack()
+    Label(delete_screen, text='Enter Bus num').place(x=20, y=70)
+    Entry(delete_screen, textvariable=bus_delete).place(x=110, y=70)
+    Button(delete_screen, text='Delete', command=delete).place(relx=0.5, rely=0.6)
+
+
+def delete():
+    delete_info = bus_delete.get()
+    with open("bus.txt", "r+") as f:
+        new_f = f.readlines()
+        f.seek(0)
+        for line1 in new_f:
+            if delete_info not in line1:
+                f.write(line1)
+        messagebox.showinfo('Deleted', 'Successfully deleted')
+        f.truncate()
+
+
 def display_searched():
     global screen_disp
     screen_disp = Toplevel(search_screen)
@@ -106,6 +131,8 @@ def main_page():
     Button(text='Display Bus Details', height='2', width='30', command=bus_display).pack()
     Label(text='').pack()
     Button(text='Search for Bus', height='2', width='30', command=search_bus).pack()
+    Label(text='').pack()
+    Button(text='Delete Bus', height='2', width='30', command=delete_bus).pack()
     Label(text='').pack()
 
     main_screen.mainloop()
