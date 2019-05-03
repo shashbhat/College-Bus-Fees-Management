@@ -11,7 +11,8 @@ def login():
 
     login_screen = Toplevel(main_screen)
     login_screen.title('Login')
-    login_screen.geometry('512x512')
+    login_screen.state('zoomed')
+    login_screen.bind('<Escape>', lambda e: login_screen.destroy())
     Label(login_screen, text='Please Enter details below to login').pack()
     Label(login_screen, text="").pack()
 
@@ -21,6 +22,7 @@ def login():
     Label(login_screen, text='Username').pack()
     username_login_entry = Entry(login_screen, textvariable=username_verify)
     username_login_entry.pack()
+    username_login_entry.focus()
     Label(login_screen, text='').pack()
     Label(login_screen, text='Password').pack()
     password_login_entry = Entry(login_screen, textvariable=password_verify, show='*')
@@ -64,7 +66,8 @@ def delete_password_not_recognised():
 def main_page():
     global main_screen
     main_screen = Tk()
-    main_screen.geometry("512x512")
+    main_screen.state('zoomed')
+    main_screen.bind('<Escape>', lambda e: main_screen.destroy())
     main_screen.title('Account Login')
     Label(text="Welcome to College Bus Fees Management", bg='white', width="512", height="2").pack()
     Label(text='').pack()

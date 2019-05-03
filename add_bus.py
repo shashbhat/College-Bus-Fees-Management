@@ -12,7 +12,8 @@ def bus_add():
     global bus_screen
     bus_screen = Toplevel(main_screen)
     bus_screen.title("Add Bus Details")
-    bus_screen.geometry('512x512')
+    bus_screen.state('zoomed')
+    bus_screen.bind('<Escape>', lambda e: bus_screen.destroy())
     bus_number = StringVar()
     driver_name = StringVar()
 
@@ -41,7 +42,8 @@ def bus_display():
     global display_bus
     display_bus = Toplevel(main_screen)
     display_bus.title("Add Bus Details")
-    display_bus.geometry('512x512')
+    display_bus.state('zoomed')
+    display_bus.bind('<Escape>', lambda e: display_bus.destroy())
     Label(display_bus, text='Bus Number')
     with open("test.csv", newline="") as file:
         reader = csv.reader(file)
@@ -63,23 +65,24 @@ def search_bus():
     global bus_search
     bus_search = StringVar()
     search_screen.title('Search bus')
-    search_screen.geometry('512x512')
+    search_screen.state('zoomed')
+    search_screen.bind('<Escape>', lambda e: search_screen.destroy())
     Label(search_screen, text='Search for bus').pack()
     Label(search_screen, text='Enter Bus num').place(x=20, y=70)
-    Entry(search_screen, textvariable=bus_search).place(x=110, y=70)
+    ent = Entry(search_screen, textvariable=bus_search)
+    ent.place(x=110, y=70)
+    ent.focus()
     Button(search_screen, text='Search', command=search).place(relx=0.5, rely=0.6)
 
 
 def search():
     bus_text = bus_search.get()
-    global line
-    with open('bus.txt', 'r') as file:
-        for line in file:
-            if bus_text in line:
-                display_searched()
+    with open('test.csv', 'r') as file:
+        csv_reader = csv.reader(file)
+        for row in csv_reader:
+            if bus_text == row[0]:
+                messagebox.showinfo('Found', row[:])
                 break
-            else:
-                print('Not found')
 
 
 def delete_bus():
@@ -88,7 +91,8 @@ def delete_bus():
     global bus_delete
     bus_delete = StringVar()
     delete_screen.title('Delete bus')
-    delete_screen.geometry('512x512')
+    delete_screen.state('zoomed')
+    delete_screen.bind('<Escape>', lambda e: delete_screen.destroy())
     Label(delete_screen, text='Delete Bus').pack()
     Label(delete_screen, text='Enter Bus num').place(x=20, y=70)
     Entry(delete_screen, textvariable=bus_delete).place(x=110, y=70)
@@ -112,7 +116,8 @@ def display_searched():
     screen_disp = Toplevel(search_screen)
     screen_disp.title('Bus Found')
     screen_disp.geometry('312x312')
-    Label(screen_disp, text=line).pack()
+    Label(screen_disp, text=row1, relief=RIDGE).grid(row=r, col=c)
+
 
 
 def student():
@@ -122,7 +127,8 @@ def student():
 def main_page():
     global main_screen
     main_screen = Tk()
-    main_screen.geometry("512x512")
+    main_screen.state('zoomed')
+    main_screen.bind('<Escape>', lambda e: main_screen.destroy())
     main_screen.title('Details')
     Label(text="Welcome to College Bus Fees Management", bg='white', width="512", height="2").pack()
     Label(text='').pack()

@@ -4,14 +4,16 @@ from tkinter import *
 def add_student():
     global student_screen
     student_screen = Toplevel(main_screen)
-    student_screen.title("Add Bus Details")
-    student_screen.geometry('512x512')
+    student_screen.title("Add Student Details")
+    student_screen.state('zoomed')
+    student_screen.bind('<Escape>', lambda e: student_screen.destroy())
 
 
 def main_page():
     global main_screen
     main_screen = Tk()
-    main_screen.geometry("512x512")
+    main_screen.state('zoomed')
+    main_screen.bind('<Escape>', lambda e: main_screen.destroy())
     main_screen.title('Student details')
     Label(text="Welcome to College Bus Fees Management", bg='white', width="512", height="2").pack()
     Label(text='').pack()
