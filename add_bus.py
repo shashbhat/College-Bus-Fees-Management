@@ -31,11 +31,14 @@ def bus_add():
 def add_bus():
     num_info = bus_number.get()
     name_info = driver_name.get()
-    file = open('test.csv', 'a')
-    file.write(num_info + ',')
-    file.write(name_info + '\n')
-    file.close()
-    messagebox.showinfo('Success', "Details added successfully")
+    file_exists = os.path.isfile('test.csv')
+    with open('test.csv', 'a', newline='') as f:
+        header = ['Bus_num', 'Driver_name']
+        writer = csv.DictWriter(f, fieldnames=header)
+        if not file_exists:
+            writer.writeheader()
+        writer.writerow({'Bus_num': num_info, 'Driver_name': name_info})
+        messagebox.showinfo('Success', "Details added successfully")
 
 
 def bus_display():
@@ -99,25 +102,53 @@ def delete_bus():
     Button(delete_screen, text='Delete', command=delete).place(relx=0.5, rely=0.6)
 
 
+def update_bus():
+    global update_screen
+    global bus_update
+    global driver_update
+    driver_update = StringVar()
+    bus_update = StringVar()
+    update_screen = Toplevel(main_screen)
+    update_screen.title('Update')
+    update_screen.state('zoomed')
+    update_screen.bind('<Escape>', lambda e: update_screen.destroy())
+    Label(update_screen, text='Enter Bus number to update').pack()
+    Entry(update_screen, textvariable=bus_update).pack()
+    Label(update_screen, text='Enter Driver Name to update').pack()
+    Entry(update_screen, textvariable=driver_update).pack()
+    Button(update_screen, text='Update', command=update).pack()
+
+
 def delete():
     delete_info = bus_delete.get()
-    with open("bus.txt", "r+") as f:
-        new_f = f.readlines()
-        f.seek(0)
-        for line1 in new_f:
-            if delete_info not in line1:
-                f.write(line1)
+    rem = [delete_info]
+    with open('test.csv', 'r', newline='') as infile, open('test1.csv', 'w', newline='') as outfile:
+        writer = csv.writer(outfile)
+        for row in csv.reader(infile):
+            if not any(remove_word in row for remove_word in rem):
+                writer.writerow(row)
+        infile.close()
+        outfile.close()
+        os.replace('test1.csv', 'test.csv')
         messagebox.showinfo('Deleted', 'Successfully deleted')
-        f.truncate()
 
 
-def display_searched():
-    global screen_disp
-    screen_disp = Toplevel(search_screen)
-    screen_disp.title('Bus Found')
-    screen_disp.geometry('312x312')
-    Label(screen_disp, text=row1, relief=RIDGE).grid(row=r, col=c)
-
+def update():
+    num = bus_update.get()
+    name = driver_update.get()
+    with open('test.csv', 'r', newline='') as file, open('temp.csv', 'a', newline='') as tempfile:
+        reader = csv.DictReader(file)
+        header = ['Bus_num', 'Driver_name']
+        writer = csv.DictWriter(tempfile, fieldnames=header)
+        writer.writeheader()
+        for row in reader:
+            if int(row['Bus_num']) == int(num):
+                row['Driver_name'] = name
+            writer.writerow(row)
+        file.close()
+        tempfile.close()
+        os.replace('temp.csv', 'test.csv')
+        messagebox.showinfo('Update', 'Updated successfully')
 
 
 def student():
@@ -140,9 +171,9 @@ def main_page():
     Label(text='').pack()
     Button(text='Delete Bus', height='2', width='30', command=delete_bus).pack()
     Label(text='').pack()
-
+    Button(text='Update Bus', height='2', width='30', command=update_bus).pack()
+    Label(text='').pack()
     main_screen.mainloop()
 
 
 main_page()
-
